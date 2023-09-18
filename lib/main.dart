@@ -20,11 +20,11 @@ class _ShareBibleState extends State<ShareBible> {
 
   String? selectedBook; // Use nullable type
   Map<String, List<String>> bookItems = {
-    'Gen.': ['Chapter 1', 'Chapter 2', 'Chapter 3'],
-    'Exo.': ['Chapter 1', 'Chapter 2', 'Chapter 3'],
-    'Lev.': ['Chapter 1', 'Chapter 23', 'Chapter 100'],
-    'Prov': ['Chapter 1', 'Chapter 10', 'Chapter 31'],
-    'Isa.': ['Chapter 1', 'Chapter 40', 'Chapter 66'],
+    'Gen.': ['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5'],
+    'Exo.': ['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5'],
+    'Lev.': ['CH 1', 'CH 24', 'CH 100', 'CH 112', 'CH 120'],
+    'Pro.': ['CH 1', 'CH 10', 'CH 13', 'CH 24', 'CH 35'],
+    'Isa.': ['CH 1', 'CH 40', 'CH 66', 'CH 67', 'CH 68'],
   };
 
   void toggleVisibility(String? book) {
@@ -79,305 +79,33 @@ class _ShareBibleState extends State<ShareBible> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
+                left: 8.0,
+                right: 8.0,
                 top: 20.0,
               ),
-              child: Container(
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.7,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                //Modal Container
-                                child: Container(
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 20.0,
-                                          right: 20.0,
-                                          top: 20.0,
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            children: [],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: bookItems.keys.map((book) {
+                  return Container(
+                    height: 55.0,
+                    width: 55.0,
+                    child: TextButton(
+                      onPressed: () {
+                        toggleVisibility(book);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 18.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.teal,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          height: 55.0,
-                          width: 55.0,
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                'Gen.',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                      ),
+                      child: Text(
+                        book,
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Exo.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Lev.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Num.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Num.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 20.0,
-              ),
-              child: Container(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Gen.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Exo.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Lev.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Num.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Num.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: bookItems.keys.map((book) {
-                return ElevatedButton(
-                  onPressed: () {
-                    toggleVisibility(book);
-                  },
-                  child: Text(book),
-                );
-              }).toList(),
             ),
             SizedBox(height: 16.0),
             Visibility(
@@ -388,10 +116,9 @@ class _ShareBibleState extends State<ShareBible> {
                     ? bookItems[selectedBook!]!
                         .map((chapter) => Text(chapter))
                         .toList()
-                    : [], // Check for null before mapping
+                    : [],
               ),
             ),
-            Text('data')
           ],
         ),
       ),
