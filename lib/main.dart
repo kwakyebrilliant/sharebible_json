@@ -105,23 +105,45 @@ class _ShareBibleState extends State<ShareBible> {
               child: Container(
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        height: 55.0,
-                        width: 55.0,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Gen.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                //Modal Container
+                                child: Container(
+                                  child: Column(
+                                    children: [],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 18.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.teal,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          height: 55.0,
+                          width: 55.0,
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                'Gen.',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
