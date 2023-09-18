@@ -13,6 +13,11 @@ class ShareBible extends StatefulWidget {
 }
 
 class _ShareBibleState extends State<ShareBible> {
+  String selectedOption = "KJV"; // Initial selected option
+
+  // List of available options
+  List<String> options = ["KJV", "ASV", "WEB"];
+
   final List<Map<String, dynamic>> bible = [
     {
       'book': 'Gen',
@@ -56,7 +61,34 @@ class _ShareBibleState extends State<ShareBible> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('ShareBible Json'),
+        title: Container(
+          child: Row(
+            children: [
+              DropdownButton<String>(
+                value: selectedOption,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedOption = newValue!;
+                  });
+                },
+                items: options.map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(
+                      option,
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(
+                width: 10.0,
+              ),
+              Container(
+                child: const Text('ShareBible Json'),
+              ),
+            ],
+          ),
+        ),
         centerTitle: false,
         backgroundColor: Colors.teal,
         elevation: 0.0,
