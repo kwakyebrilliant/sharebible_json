@@ -18,54 +18,25 @@ class _ShareBibleState extends State<ShareBible> {
   // List of available options
   List<String> options = ["KJV", "ASV", "WEB"];
 
-  // A list to keep track of whether items are visible or not
-  List<bool> itemVisibility = [false, false, false, false, false];
+  String? selectedBook; // Use nullable type
+  Map<String, List<String>> bookItems = {
+    'Gen.': ['Chapter 1', 'Chapter 2', 'Chapter 3'],
+    'Exo.': ['Chapter 1', 'Chapter 2', 'Chapter 3'],
+    'Lev.': ['Chapter 1', 'Chapter 23', 'Chapter 100'],
+    'Prov': ['Chapter 1', 'Chapter 10', 'Chapter 31'],
+    'Isa.': ['Chapter 1', 'Chapter 40', 'Chapter 66'],
+  };
 
-  // Function to toggle item visibility when a button is pressed
-  void toggleItemVisibility(int index) {
+  void toggleVisibility(String? book) {
     setState(() {
-      itemVisibility[index] = !itemVisibility[index];
+      if (selectedBook == book) {
+        selectedBook = null; // Use null instead of an empty string
+      } else {
+        selectedBook = book;
+      }
     });
   }
 
-  final List<Map<String, dynamic>> bible = [
-    {
-      'book': 'Gen',
-      "chapterNumber": 1,
-      "verseNumber": 1,
-      "value": "In the beginning, God created the heavens and the earth.  "
-    },
-    {
-      'book': 'Gen',
-      "chapterNumber": 2,
-      "verseNumber": 1,
-      "value": "In the, God created the heavens and the earth.  "
-    },
-    {
-      'book': 'Exo',
-      "chapterNumber": 1,
-      "verseNumber": 1,
-      "value": "In the beginning, God created the heavens and the earth.  "
-    },
-    {
-      'book': 'Exo',
-      "chapterNumber": 2,
-      "verseNumber": 1,
-      "value": "In the, God created the heavens and the earth.  "
-    },
-    {
-      'book': 'Lev',
-      "chapterNumber": 1,
-      "verseNumber": 1,
-      "value": "In the beginning, God created the heavens and the earth.  "
-    },
-    {
-      'book': 'Lev',
-      "chapterNumber": 2,
-      "verseNumber": 1,
-      "value": "In the, God created the heavens and the earth.  "
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +107,7 @@ class _ShareBibleState extends State<ShareBible> {
                                           top: 20.0,
                                         ),
                                         child: Container(
-                                          child: Row(
+                                          child: Column(
                                             children: [],
                                           ),
                                         ),
@@ -397,6 +368,30 @@ class _ShareBibleState extends State<ShareBible> {
                 ),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: bookItems.keys.map((book) {
+                return ElevatedButton(
+                  onPressed: () {
+                    toggleVisibility(book);
+                  },
+                  child: Text(book),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 16.0),
+            Visibility(
+              visible: selectedBook != null,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: selectedBook != null
+                    ? bookItems[selectedBook!]!
+                        .map((chapter) => Text(chapter))
+                        .toList()
+                    : [], // Check for null before mapping
+              ),
+            ),
+            Text('data')
           ],
         ),
       ),
