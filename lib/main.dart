@@ -18,6 +18,16 @@ class _ShareBibleState extends State<ShareBible> {
   // List of available options
   List<String> options = ["KJV", "ASV", "WEB"];
 
+  // A list to keep track of whether items are visible or not
+  List<bool> itemVisibility = [false, false, false, false, false];
+
+  // Function to toggle item visibility when a button is pressed
+  void toggleItemVisibility(int index) {
+    setState(() {
+      itemVisibility[index] = !itemVisibility[index];
+    });
+  }
+
   final List<Map<String, dynamic>> bible = [
     {
       'book': 'Gen',
@@ -118,7 +128,20 @@ class _ShareBibleState extends State<ShareBible> {
                                 //Modal Container
                                 child: Container(
                                   child: Column(
-                                    children: [],
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 20.0,
+                                          right: 20.0,
+                                          top: 20.0,
+                                        ),
+                                        child: Container(
+                                          child: Row(
+                                            children: [],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
