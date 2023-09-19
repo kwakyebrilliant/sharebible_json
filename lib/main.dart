@@ -132,13 +132,30 @@ class _ShareBibleState extends State<ShareBible> {
                     : [],
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  readJson();
-                },
-                child: const Center(
-                  child: Text('Load data'),
-                ))
+            _items.isNotEmpty
+                ? Expanded(
+                    child: ListView.builder(
+                        itemCount: _items.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            key: ValueKey(_items[index]["id"]),
+                            margin: const EdgeInsets.all(10.0),
+                            color: Colors.amber.shade100,
+                            child: ListTile(
+                              leading: Text(_items[index]["id"]),
+                              title: Text(_items[index]["name"]),
+                              subtitle: Text(_items[index]["description"]),
+                            ),
+                          );
+                        }),
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      readJson();
+                    },
+                    child: const Center(
+                      child: Text('Load data'),
+                    ))
           ],
         ),
       ),
