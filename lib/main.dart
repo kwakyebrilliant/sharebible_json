@@ -44,7 +44,7 @@ class _ShareBibleState extends State<ShareBible> {
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('assets/sample.json');
-    final data = await json.decode(response);
+    final data = json.decode(response);
     setState(() {
       _items = data["items"];
     });
@@ -132,6 +132,13 @@ class _ShareBibleState extends State<ShareBible> {
                     : [],
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  readJson();
+                },
+                child: const Center(
+                  child: Text('Load data'),
+                ))
           ],
         ),
       ),
