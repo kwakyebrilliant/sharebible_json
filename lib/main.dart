@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -34,6 +37,16 @@ class _ShareBibleState extends State<ShareBible> {
       } else {
         selectedBook = book;
       }
+    });
+  }
+
+  List _items = [];
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/sample.json');
+    final data = await json.decode(response);
+    setState(() {
+      _items = data["items"];
     });
   }
 
