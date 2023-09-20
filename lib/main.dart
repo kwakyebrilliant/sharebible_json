@@ -40,6 +40,7 @@ class _ShareBibleState extends State<ShareBible> {
     });
   }
 
+  List _metadata = [];
   List _items = [];
 
   Future<void> readJson() async {
