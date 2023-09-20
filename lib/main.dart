@@ -40,9 +40,13 @@ class _ShareBibleState extends State<ShareBible> {
     });
   }
 
+  //KJV json here
   List _metadata = [];
+
+  //sample joson here
   List _items = [];
 
+  //sample joson here
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('assets/sample.json');
     final data = json.decode(response);
