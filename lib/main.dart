@@ -45,18 +45,6 @@ class _ShareBibleState extends State<ShareBible> {
     });
   }
 
-  //sample joson here
-  List _items = [];
-
-  //sample joson here
-  Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/sample.json');
-    final data = json.decode(response);
-    setState(() {
-      _items = data["items"];
-    });
-  }
-
   late Metadata metadata;
   List<Verse> verses = [];
 
