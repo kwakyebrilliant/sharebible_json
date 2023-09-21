@@ -180,6 +180,37 @@ class _ShareBibleState extends State<ShareBible> {
                 ]),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(children: [
+                  _metadata.isNotEmpty
+                      ? Expanded(
+                          child: ListView.builder(
+                              itemCount: _metadata.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  key: ValueKey(_metadata[index]["book"]),
+                                  margin: const EdgeInsets.all(10.0),
+                                  color: Colors.teal.shade400,
+                                  child: ListTile(
+                                    title: Text(_metadata[index]["book_name"]),
+                                  ),
+                                );
+                              }),
+                        )
+                      : ElevatedButton(
+                          onPressed: () {
+                            readJson();
+                          },
+                          child: const Center(
+                            child: Text('Load bible'),
+                          ))
+                ]),
+              ),
+            ),
           ],
         ),
       ),
