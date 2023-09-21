@@ -2,6 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sharebible_json/module/meta_data.dart';
+
+Future<String> loadJsonData() async {
+  return await rootBundle.loadString('assets/kjv.json');
+}
 
 void main() {
   runApp(MaterialApp(
@@ -40,18 +45,6 @@ class _ShareBibleState extends State<ShareBible> {
     });
   }
 
-  //KJV json here
-  List _metadata = [];
-
-  //KJV json here
-  Future<void> readKJV() async {
-    final String response = await rootBundle.loadString('assets/kjv.json');
-    final bible = json.decode(response);
-    setState(() {
-      _metadata = bible["metadata"];
-    });
-  }
-
   //sample joson here
   List _items = [];
 
@@ -61,6 +54,23 @@ class _ShareBibleState extends State<ShareBible> {
     final data = json.decode(response);
     setState(() {
       _items = data["items"];
+    });
+  }
+
+  late Metadata metadata;
+  List<Verse> verses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadJsonData().then((String jsonContent) {
+      final jsonData = json.decode(jsonContent);
+      setState(() {
+        metadata = Metadata.fromJson(jsonData['metadata']);
+        verses = (jsonData['verses'] as List)
+            .map((verseJson) => Verse.fromJson(verseJson))
+            .toList();
+      });
     });
   }
 
@@ -101,119 +111,98 @@ class _ShareBibleState extends State<ShareBible> {
         backgroundColor: Colors.teal,
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 8.0,
-                right: 8.0,
-                top: 20.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: bookItems.keys.map((book) {
-                  return Container(
-                    height: 55.0,
-                    width: 55.0,
-                    child: TextButton(
-                      onPressed: () {
-                        toggleVisibility(book);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
-                      ),
-                      child: Text(
-                        book,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Visibility(
-              visible: selectedBook != null,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: selectedBook != null
-                    ? bookItems[selectedBook!]!
-                        .map((chapter) => Text(chapter))
-                        .toList()
-                    : [],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(children: [
-                  _items.isNotEmpty
-                      ? Expanded(
-                          child: ListView.builder(
-                              itemCount: _items.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  key: ValueKey(_items[index]["id"]),
-                                  margin: const EdgeInsets.all(10.0),
-                                  color: Colors.amber.shade100,
-                                  child: ListTile(
-                                    leading: Text(_items[index]["id"]),
-                                    title: Text(_items[index]["name"]),
-                                    subtitle:
-                                        Text(_items[index]["description"]),
-                                  ),
-                                );
-                              }),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {
-                            readJson();
-                          },
-                          child: const Center(
-                            child: Text('Load data'),
-                          ))
-                ]),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(children: [
-                  _metadata.isNotEmpty
-                      ? Expanded(
-                          child: ListView.builder(
-                              itemCount: _metadata.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  key: ValueKey(_metadata[index]["book"]),
-                                  margin: const EdgeInsets.all(10.0),
-                                  color: Colors.teal.shade400,
-                                  child: ListTile(
-                                    title: Text(_metadata[index]["book_name"]),
-                                  ),
-                                );
-                              }),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {
-                            readJson();
-                          },
-                          child: const Center(
-                            child: Text('Load bible'),
-                          ))
-                ]),
-              ),
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: verses.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(
+                '${verses[index].bookName} ${verses[index].chapter}:${verses[index].verse}'),
+            subtitle: Text(verses[index].text),
+          );
+        },
       ),
+      // body: SingleChildScrollView(
+      //   child: Column(
+      //     children: [
+      //       Padding(
+      //         padding: const EdgeInsets.only(
+      //           left: 8.0,
+      //           right: 8.0,
+      //           top: 20.0,
+      //         ),
+      //         child: Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //           children: bookItems.keys.map((book) {
+      //             return Container(
+      //               height: 55.0,
+      //               width: 55.0,
+      //               child: TextButton(
+      //                 onPressed: () {
+      //                   toggleVisibility(book);
+      //                 },
+      //                 style: ElevatedButton.styleFrom(
+      //                   backgroundColor: Colors.teal,
+      //                 ),
+      //                 child: Text(
+      //                   book,
+      //                   style: const TextStyle(
+      //                     color: Colors.white,
+      //                   ),
+      //                 ),
+      //               ),
+      //             );
+      //           }).toList(),
+      //         ),
+      //       ),
+      //       SizedBox(height: 16.0),
+      //       Visibility(
+      //         visible: selectedBook != null,
+      //         child: Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //           children: selectedBook != null
+      //               ? bookItems[selectedBook!]!
+      //                   .map((chapter) => Text(chapter))
+      //                   .toList()
+      //               : [],
+      //         ),
+      //       ),
+      //       Padding(
+      //         padding: const EdgeInsets.all(20.0),
+      //         child: Container(
+      //           height: MediaQuery.of(context).size.height,
+      //           width: MediaQuery.of(context).size.width,
+      //           child: Column(children: [
+      //             _items.isNotEmpty
+      //                 ? Expanded(
+      //                     child: ListView.builder(
+      //                         itemCount: _items.length,
+      //                         itemBuilder: (context, index) {
+      //                           return Card(
+      //                             key: ValueKey(_items[index]["id"]),
+      //                             margin: const EdgeInsets.all(10.0),
+      //                             color: Colors.amber.shade100,
+      //                             child: ListTile(
+      //                               leading: Text(_items[index]["id"]),
+      //                               title: Text(_items[index]["name"]),
+      //                               subtitle:
+      //                                   Text(_items[index]["description"]),
+      //                             ),
+      //                           );
+      //                         }),
+      //                   )
+      //                 : ElevatedButton(
+      //                     onPressed: () {
+      //                       readJson();
+      //                     },
+      //                     child: const Center(
+      //                       child: Text('Load data'),
+      //                     ))
+      //           ]),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
