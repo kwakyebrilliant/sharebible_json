@@ -43,6 +43,15 @@ class _ShareBibleState extends State<ShareBible> {
   //KJV json here
   List _metadata = [];
 
+  //KJV json here
+  Future<void> readKJV() async {
+    final String response = await rootBundle.loadString('assets/kjv.json');
+    final bible = json.decode(response);
+    setState(() {
+      _metadata = bible["metadata"];
+    });
+  }
+
   //sample joson here
   List _items = [];
 
