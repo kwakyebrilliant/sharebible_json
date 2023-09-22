@@ -22,6 +22,8 @@ class BibleBooksList extends StatefulWidget {
 
 class _BibleBooksListState extends State<BibleBooksList> {
   List<String> bibleBooks = []; // List to store the Bible books in order
+  List<String> filteredBooks = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -115,6 +117,7 @@ class _BibleBooksListState extends State<BibleBooksList> {
 
       setState(() {
         bibleBooks = uniqueBooks.toList();
+        filteredBooks = bibleBooks;
       });
     });
   }
@@ -132,16 +135,39 @@ class _BibleBooksListState extends State<BibleBooksList> {
     );
   }
 
+  void _filterBooks(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredBooks = bibleBooks;
+      });
+    } else {
+      // Filter the books based on the search query
+      final List<String> result = bibleBooks
+          .where((book) => book.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      setState(() {
+        filteredBooks = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bible Books List'),
+        title: TextField(
+          controller: searchController,
+          decoration: const InputDecoration(
+            hintText: 'Search Bible Books',
+            border: InputBorder.none,
+          ),
+          onChanged: _filterBooks,
+        ),
       ),
       body: ListView.builder(
-        itemCount: bibleBooks.length,
+        itemCount: filteredBooks.length,
         itemBuilder: (context, index) {
-          final selectedBook = bibleBooks[index];
+          final selectedBook = filteredBooks[index];
           return ListTile(
             title: Text(selectedBook),
             onTap: () {
@@ -151,6 +177,12 @@ class _BibleBooksListState extends State<BibleBooksList> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }
 
