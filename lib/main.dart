@@ -323,7 +323,7 @@ class _BibleBooksListState extends State<BibleBooksList> {
                     _navigateToChaptersVerses(context, selectedBook);
                   },
                   trailing: const Icon(
-                    Icons.arrow_forward_rounded,
+                    Icons.arrow_right_rounded,
                   ),
                 ),
               ),
