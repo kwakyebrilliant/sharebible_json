@@ -1,196 +1,256 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sharebible_json/module/meta_data.dart';
-
-Future<String> loadJsonData() async {
-  return await rootBundle.loadString('assets/kjv.json');
-}
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ShareBible(),
-  ));
+  runApp(MyApp());
 }
 
-class ShareBible extends StatefulWidget {
+class MyApp extends StatelessWidget {
   @override
-  State<ShareBible> createState() => _ShareBibleState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: BibleBooksList(),
+    );
+  }
 }
 
-class _ShareBibleState extends State<ShareBible> {
-  String selectedOption = "KJV"; // Initial selected option
+class BibleBooksList extends StatefulWidget {
+  @override
+  _BibleBooksListState createState() => _BibleBooksListState();
+}
 
-  // List of available options
-  List<String> options = ["KJV", "ASV", "WEB"];
-
-  String? selectedBook; // Use nullable type
-  Map<String, List<String>> bookItems = {
-    'Gen.': ['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5'],
-    'Exo.': ['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5'],
-    'Lev.': ['CH 1', 'CH 24', 'CH 100', 'CH 112', 'CH 120'],
-    'Pro.': ['CH 1', 'CH 10', 'CH 13', 'CH 24', 'CH 35'],
-    'Isa.': ['CH 1', 'CH 40', 'CH 66', 'CH 67', 'CH 68'],
-  };
-
-  void toggleVisibility(String? book) {
-    setState(() {
-      if (selectedBook == book) {
-        selectedBook = null; // Use null instead of an empty string
-      } else {
-        selectedBook = book;
-      }
-    });
-  }
-
-  late Metadata metadata;
-  List<Verse> verses = [];
+class _BibleBooksListState extends State<BibleBooksList> {
+  List<String> bibleBooks = []; // List to store the Bible books in order
 
   @override
   void initState() {
     super.initState();
     loadJsonData().then((String jsonContent) {
       final jsonData = json.decode(jsonContent);
+      final verses = jsonData['verses'];
+
+      // Define a custom order for the Bible books based on their position
+      final Map<String, int> bookOrder = {
+        'Genesis': 1,
+        'Exodus': 2,
+        'Leviticus': 3,
+        'Numbers': 4,
+        'Deuteronomy': 5,
+        'Joshua': 6,
+        'Judges': 7,
+        'Ruth': 8,
+        '1 Samuel': 9,
+        '2 Samuel': 10,
+        '1 Kings': 11,
+        '2 Kings': 12,
+        '1 Chronicles': 13,
+        '2 Chronicles': 14,
+        'Ezra': 15,
+        'Nehemiah': 16,
+        'Esther': 17,
+        'Job': 18,
+        'Psalms': 19,
+        'Proverbs': 20,
+        'Ecclesiastes': 21,
+        'Song of Solomon': 22,
+        'Isaiah': 23,
+        'Jeremiah': 24,
+        'Lamentations': 25,
+        'Ezekiel': 26,
+        'Daniel': 27,
+        'Hosea': 28,
+        'Joel': 29,
+        'Amos': 30,
+        'Obadiah': 31,
+        'Jonah': 32,
+        'Micah': 33,
+        'Nahum': 34,
+        'Habakkuk': 35,
+        'Zephaniah': 36,
+        'Haggai': 37,
+        'Zechariah': 38,
+        'Malachi': 39,
+        'Matthew': 40,
+        'Mark': 41,
+        'Luke': 42,
+        'John': 43,
+        'Acts': 44,
+        'Romans': 45,
+        '1 Corinthians': 46,
+        '2 Corinthians': 47,
+        'Galatians': 48,
+        'Ephesians': 49,
+        'Philippians': 50,
+        'Colossians': 51,
+        '1 Thessalonians': 52,
+        '2 Thessalonians': 53,
+        '1 Timothy': 54,
+        '2 Timothy': 55,
+        'Titus': 56,
+        'Philemon': 57,
+        'Hebrews': 58,
+        'James': 59,
+        '1 Peter': 60,
+        '2 Peter': 61,
+        '1 John': 62,
+        '2 John': 63,
+        '3 John': 64,
+        'Jude': 65,
+        'Revelation': 66,
+      };
+
+      // Sort the Bible books based on their custom order
+      verses.sort((a, b) {
+        final int orderA = bookOrder[a['book_name']] ?? 9999;
+        final int orderB = bookOrder[b['book_name']] ?? 9999;
+        return orderA.compareTo(orderB);
+      });
+
+      // Extract unique book names
+      final Set<String> uniqueBooks = {};
+      for (var verse in verses) {
+        uniqueBooks.add(verse['book_name']);
+      }
+
       setState(() {
-        metadata = Metadata.fromJson(jsonData['metadata']);
-        verses = (jsonData['verses'] as List)
-            .map((verseJson) => Verse.fromJson(verseJson))
-            .toList();
+        bibleBooks = uniqueBooks.toList();
       });
     });
+  }
+
+  Future<String> loadJsonData() async {
+    return await rootBundle.loadString('assets/kjv.json');
+  }
+
+  void _navigateToChaptersVerses(BuildContext context, String selectedBook) {
+    // You can navigate to a new screen and pass the selected book to it
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BibleChaptersVersesScreen(selectedBook),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Container(
-          child: Row(
-            children: [
-              DropdownButton<String>(
-                value: selectedOption,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedOption = newValue!;
-                  });
-                },
-                items: options.map((option) {
-                  return DropdownMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(
-                width: 10.0,
-              ),
-              Container(
-                child: const Text('ShareBible Json'),
-              ),
-            ],
-          ),
-        ),
-        centerTitle: false,
-        backgroundColor: Colors.teal,
-        elevation: 0.0,
+        title: Text('Bible Books List'),
       ),
       body: ListView.builder(
-        itemCount: verses.length,
+        itemCount: bibleBooks.length,
         itemBuilder: (context, index) {
+          final selectedBook = bibleBooks[index];
           return ListTile(
-            title: Text(
-                '${verses[index].bookName} ${verses[index].chapter}:${verses[index].verse}'),
-            subtitle: Text(verses[index].text),
+            title: Text(selectedBook),
+            onTap: () {
+              _navigateToChaptersVerses(context, selectedBook);
+            },
           );
         },
       ),
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       Padding(
-      //         padding: const EdgeInsets.only(
-      //           left: 8.0,
-      //           right: 8.0,
-      //           top: 20.0,
-      //         ),
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //           children: bookItems.keys.map((book) {
-      //             return Container(
-      //               height: 55.0,
-      //               width: 55.0,
-      //               child: TextButton(
-      //                 onPressed: () {
-      //                   toggleVisibility(book);
-      //                 },
-      //                 style: ElevatedButton.styleFrom(
-      //                   backgroundColor: Colors.teal,
-      //                 ),
-      //                 child: Text(
-      //                   book,
-      //                   style: const TextStyle(
-      //                     color: Colors.white,
-      //                   ),
-      //                 ),
-      //               ),
-      //             );
-      //           }).toList(),
-      //         ),
-      //       ),
-      //       SizedBox(height: 16.0),
-      //       Visibility(
-      //         visible: selectedBook != null,
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //           children: selectedBook != null
-      //               ? bookItems[selectedBook!]!
-      //                   .map((chapter) => Text(chapter))
-      //                   .toList()
-      //               : [],
-      //         ),
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.all(20.0),
-      //         child: Container(
-      //           height: MediaQuery.of(context).size.height,
-      //           width: MediaQuery.of(context).size.width,
-      //           child: Column(children: [
-      //             _items.isNotEmpty
-      //                 ? Expanded(
-      //                     child: ListView.builder(
-      //                         itemCount: _items.length,
-      //                         itemBuilder: (context, index) {
-      //                           return Card(
-      //                             key: ValueKey(_items[index]["id"]),
-      //                             margin: const EdgeInsets.all(10.0),
-      //                             color: Colors.amber.shade100,
-      //                             child: ListTile(
-      //                               leading: Text(_items[index]["id"]),
-      //                               title: Text(_items[index]["name"]),
-      //                               subtitle:
-      //                                   Text(_items[index]["description"]),
-      //                             ),
-      //                           );
-      //                         }),
-      //                   )
-      //                 : ElevatedButton(
-      //                     onPressed: () {
-      //                       readJson();
-      //                     },
-      //                     child: const Center(
-      //                       child: Text('Load data'),
-      //                     ))
-      //           ]),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+    );
+  }
+}
+
+class BibleChaptersVersesScreen extends StatelessWidget {
+  final String? selectedBook;
+
+  BibleChaptersVersesScreen(this.selectedBook);
+
+  Future<String> loadJsonData() async {
+    return await rootBundle.loadString('assets/kjv.json');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(selectedBook!),
+      ),
+      body: FutureBuilder<String>(
+        future: loadJsonData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading indicator
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData) {
+            return Text('No data available.');
+          } else {
+            final jsonData = json.decode(snapshot.data!);
+            final verses = jsonData['verses'];
+
+            // Filter chapters based on the selected book
+            final List<int> chapters = [];
+            for (var verse in verses) {
+              if (verse['book_name'] == selectedBook) {
+                final chapter = verse['chapter'];
+                if (!chapters.contains(chapter)) {
+                  chapters.add(chapter);
+                }
+              }
+            }
+
+            return ListView.builder(
+              itemCount: chapters.length,
+              itemBuilder: (context, index) {
+                final chapterNumber = chapters[index];
+                return ListTile(
+                  title: Text('Chapter $chapterNumber'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BibleVersesScreen(
+                          selectedBook!,
+                          chapterNumber,
+                          verses,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class BibleVersesScreen extends StatelessWidget {
+  final String selectedBook;
+  final int selectedChapter;
+  final List<dynamic> verses;
+
+  BibleVersesScreen(this.selectedBook, this.selectedChapter, this.verses);
+
+  @override
+  Widget build(BuildContext context) {
+    final List chapterVerses = verses
+        .where(
+          (verse) =>
+              verse['book_name'] == selectedBook &&
+              verse['chapter'] == selectedChapter,
+        )
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$selectedBook Chapter $selectedChapter'),
+      ),
+      body: ListView.builder(
+        itemCount: chapterVerses.length,
+        itemBuilder: (context, index) {
+          final verse = chapterVerses[index];
+          return ListTile(
+            title: Text('Verse ${verse['verse']}'),
+            subtitle: Text(verse['text']),
+          );
+        },
+      ),
     );
   }
 }
