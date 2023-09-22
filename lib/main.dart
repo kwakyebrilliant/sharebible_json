@@ -299,17 +299,25 @@ class _BibleBooksListState extends State<BibleBooksList> {
           ],
         ),
       ),
-      body: ListView.builder(
-        itemCount: filteredBooks.length,
-        itemBuilder: (context, index) {
-          final selectedBook = filteredBooks[index];
-          return ListTile(
-            title: Text(selectedBook),
-            onTap: () {
-              _navigateToChaptersVerses(context, selectedBook);
-            },
-          );
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          itemCount: filteredBooks.length,
+          itemBuilder: (context, index) {
+            final selectedBook = filteredBooks[index];
+            return Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Card(
+                child: ListTile(
+                  title: Text(selectedBook),
+                  onTap: () {
+                    _navigateToChaptersVerses(context, selectedBook);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
