@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: BibleBooksList(),
     );
   }
 }
 
 class BibleBooksList extends StatefulWidget {
+  const BibleBooksList({super.key});
+
   @override
   _BibleBooksListState createState() => _BibleBooksListState();
 }
@@ -371,11 +375,11 @@ class BibleChaptersVersesScreen extends StatelessWidget {
         future: loadJsonData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading indicator
+            return const CircularProgressIndicator(); // Loading indicator
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData) {
-            return Text('No data available.');
+            return const Text('No data available.');
           } else {
             final jsonData = json.decode(snapshot.data!);
             final verses = jsonData['verses'];
@@ -434,7 +438,8 @@ class BibleVersesScreen extends StatelessWidget {
   final int selectedChapter;
   final List<dynamic> verses;
 
-  BibleVersesScreen(this.selectedBook, this.selectedChapter, this.verses);
+  const BibleVersesScreen(this.selectedBook, this.selectedChapter, this.verses,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
