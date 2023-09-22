@@ -25,7 +25,7 @@ class _BibleBooksListState extends State<BibleBooksList> {
   List<String> filteredBooks = [];
   TextEditingController searchController = TextEditingController();
   String selectedVersion = 'KJV'; // Default Bible version
-  List<String> availableVersions = ['KJV', 'ASV', 'WEB'];
+  List<String> availableVersions = ['KJV', 'ASV', 'WEB', 'NET'];
 
   @override
   void initState() {
@@ -132,6 +132,8 @@ class _BibleBooksListState extends State<BibleBooksList> {
       assetPath = 'assets/asv.json';
     } else if (version == 'WEB') {
       assetPath = 'assets/web.json';
+    } else if (version == 'NET') {
+      assetPath = 'assets/net.json';
     }
 
     return await rootBundle.loadString(assetPath);
@@ -332,6 +334,8 @@ class BibleChaptersVersesScreen extends StatelessWidget {
       assetPath = 'assets/asv.json';
     } else if (selectedVersion == 'WEB') {
       assetPath = 'assets/web.json';
+    } else if (selectedVersion == 'NET') {
+      assetPath = 'assets/net.json';
     }
 
     return await rootBundle.loadString(assetPath);
