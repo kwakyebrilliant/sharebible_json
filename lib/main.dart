@@ -62,6 +62,14 @@ class _ShareBibleState extends State<ShareBible> {
     });
   }
 
+  List<String> getUniqueBookNames(List<Verse> verses) {
+    Set<String> bookNames = {};
+    for (var verse in verses) {
+      bookNames.add(verse.bookName);
+    }
+    return bookNames.toList()..sort(); // Sort the book names alphabetically
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
