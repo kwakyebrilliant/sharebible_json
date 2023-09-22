@@ -391,25 +391,36 @@ class BibleChaptersVersesScreen extends StatelessWidget {
               }
             }
 
-            return ListView.builder(
-              itemCount: chapters.length,
-              itemBuilder: (context, index) {
-                final chapterNumber = chapters[index];
-                return ListTile(
-                  title: Text('Chapter $chapterNumber'),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BibleVersesScreen(
-                          selectedBook!,
-                          chapterNumber,
-                          verses,
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                itemCount: chapters.length,
+                itemBuilder: (context, index) {
+                  final chapterNumber = chapters[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Card(
+                      child: ListTile(
+                        title: Text('Chapter $chapterNumber'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BibleVersesScreen(
+                                selectedBook!,
+                                chapterNumber,
+                                verses,
+                              ),
+                            ),
+                          );
+                        },
+                        trailing: const Icon(
+                          Icons.arrow_right_rounded,
                         ),
                       ),
-                    );
-                  },
-                );
-              },
+                    ),
+                  );
+                },
+              ),
             );
           }
         },
