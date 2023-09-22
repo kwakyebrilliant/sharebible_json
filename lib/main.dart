@@ -291,6 +291,9 @@ class _BibleBooksListState extends State<BibleBooksList> {
                 controller: searchController,
                 decoration: const InputDecoration(
                   hintText: 'Search Bible',
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                   border: InputBorder.none,
                 ),
                 onChanged: _filterBooks,
