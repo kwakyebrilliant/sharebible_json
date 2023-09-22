@@ -322,6 +322,9 @@ class _BibleBooksListState extends State<BibleBooksList> {
                   onTap: () {
                     _navigateToChaptersVerses(context, selectedBook);
                   },
+                  trailing: const Icon(
+                    Icons.arrow_forward_rounded,
+                  ),
                 ),
               ),
             );
