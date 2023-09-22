@@ -278,14 +278,20 @@ class _BibleBooksListState extends State<BibleBooksList> {
                   });
                 }
               },
+              dropdownColor: Colors.blue,
               items: availableVersions.map((String version) {
                 return DropdownMenuItem<String>(
                   value: version,
-                  child: Text(version),
+                  child: Text(
+                    version,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 );
               }).toList(),
             ),
-            SizedBox(width: 20.0),
+            const SizedBox(width: 20.0),
             Expanded(
               child: TextField(
                 controller: searchController,
