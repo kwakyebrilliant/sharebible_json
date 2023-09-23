@@ -455,15 +455,18 @@ class BibleVersesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('$selectedBook Chapter $selectedChapter'),
       ),
-      body: ListView.builder(
-        itemCount: chapterVerses.length,
-        itemBuilder: (context, index) {
-          final verse = chapterVerses[index];
-          return ListTile(
-            title: Text('Verse ${verse['verse']}'),
-            subtitle: Text(verse['text']),
-          );
-        },
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: ListView.builder(
+          itemCount: chapterVerses.length,
+          itemBuilder: (context, index) {
+            final verse = chapterVerses[index];
+            return ListTile(
+              title: Text('Verse ${verse['verse']}'),
+              subtitle: Text(verse['text']),
+            );
+          },
+        ),
       ),
     );
   }
